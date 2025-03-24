@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+//1
+model User{
+    id String @id @default(uuid())
+    name String
+    email String @unique
+    firebaseUid String @unique
+    // password String?
+    phoneNumber String? 
+    role Role @default(user)
+    status Status
+    profileImage String
+    Product Product[]
+    Order Order[]
+    Cart Cart[]
+    Payment Payment[]
+    RatingAndReview RatingAndReview[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+//main n sub catagory 2,self referencing
+model Catagory{
+    id String @id @default(uuid())
+    name String  @unique 
+    parentId String? 
+    parent Catagory? @relation("CatagoryParent",fields: [parentId] ,references: [id])
+    subcategories Catagory[] @relation("CatagoryParent")
+    Product Product[]
+    @@index([parentId])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+//3
+model Product{
+        id String @id @default(uuid())
+        title String
+        image String[]
+        description String
+        price Float
+        sellerId String
+        user User @relation(fields: [sellerId],references: [id])
+        catagoryId String
+        catagory Catagory @relation(fields: [catagoryId],references: [id])
+        status ProductStatus
+        ProductVaraint ProductVaraint[]
+        OrderItem OrderItem[]
+        CartItem CartItem[]
+        RatingAndReview RatingAndReview[]
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+
+
+}
+//4
+model ProductVaraint{
+     id String @id @default(uuid())
+     productId String
+     product Product @relation(fields: [productId],references: [id])
+     variant Json
+}
+//5
+model Order{
+        id String @id @default(uuid())
+        userId String
+        user User @relation(fields: [userId],references: [id])
+        status OrderStatus
+        OrderItem OrderItem[]
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+        Payment Payment[]
+}
+//6
+model OrderItem{
+        id String @id @default(uuid())
+        orderId String
+        order Order @relation(fields: [orderId],references: [id])
+        productId String
+        product Product @relation(fields: [productId],references: [id])
+        quantity Int
+        price Float
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+
+}
+//7
+model Cart{
+        id String @id @default(uuid())
+        userId String
+        user User @relation(fields: [userId],references: [id])
+        CartItem CartItem[]
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+
+}
+//8
+model CartItem{
+        id String @id @default(uuid())
+        cartId String
+        cart Cart @relation(fields: [cartId],references: [id])
+        productId String
+        product Product @relation(fields: [productId],references: [id])
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+}
+//9
+model Payment{
+        id String @id @default(uuid())
+        userId String
+        user User @relation(fields: [userId],references: [id])
+        orderId String
+        order Order @relation(fields: [orderId],references: [id])
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+}
+//10
+model RatingAndReview{
+     id String @id @default(uuid())
+     userId String
+     user User @relation(fields: [userId],references: [id])
+     productId String
+     product Product @relation(fields: [productId],references: [id])
+     reviewText String
+     createdAt DateTime @default(now())
+     updatedAt DateTime @updatedAt
+}
+
+enum Role{
+    user
+    admin
+    seller
+}
+enum Status{
+    active
+    inactive
+
+}
+enum ProductStatus{
+    out
+    active
+    inactive
+}
+enum OrderStatus{
+    pending
+    cancelled
+    delivered
+}
