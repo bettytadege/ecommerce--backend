@@ -30,7 +30,7 @@ model Catagory{
     id String @id @default(uuid())
     name String  @unique 
     parentId String? 
-    parent Catagory? @relation("CatagoryParent",fields: [parentId] ,references: [id])
+    parent Catagory? @relation("CatagoryParent",fields: [parentId] ,references: [id], onDelete:Cascade)
     subcategories Catagory[] @relation("CatagoryParent")
     Product Product[]
     @@index([parentId])
