@@ -40,30 +40,39 @@ model Catagory{
 //3
 model Product{
         id String @id @default(uuid())
-        title String
+        name String
         image String[]
         description String
-        price Float
+        price Decimal
+        stock Decimal?
+        sku String? @unique
         sellerId String
-        user User @relation(fields: [sellerId],references: [id])
+        discount Decimal?
+        seller User @relation(fields: [sellerId],references: [id])
         catagoryId String
         catagory Catagory @relation(fields: [catagoryId],references: [id])
         status ProductStatus
-        ProductVaraint ProductVaraint[]
+        ProductVariant ProductVariant[]
         OrderItem OrderItem[]
         CartItem CartItem[]
         RatingAndReview RatingAndReview[]
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
 
+        @@index([sellerId])
+        @@index([catagoryId])
+        @@index([name])
+
 
 }
 //4
-model ProductVaraint{
+model ProductVariant{
      id String @id @default(uuid())
+     stock Decimal
+     sku String @unique
      productId String
      product Product @relation(fields: [productId],references: [id])
-     variant Json
+     attribute Json
 }
 //5
 model Order{
@@ -142,7 +151,7 @@ enum Status{
 
 }
 enum ProductStatus{
-    out
+    out_of_stock
     active
     inactive
 }
