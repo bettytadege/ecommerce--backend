@@ -48,9 +48,9 @@ model Product{
         sku String            @unique
         sellerId String
         discount Decimal?
-        seller User @relation(fields: [sellerId],references: [id])
+        seller User @relation(fields: [sellerId],references: [id], onDelete:Cascade)
         catagoryId String
-        catagory Catagory @relation(fields: [catagoryId],references: [id])
+        catagory Catagory @relation(fields: [catagoryId],references: [id], onDelete:Cascade)
         status ProductStatus
         ProductVariant ProductVariant[]
         OrderItem OrderItem[]
@@ -72,7 +72,7 @@ model ProductVariant{
      sku String @unique
      productId String
      price Decimal?
-     product Product @relation(fields: [productId],references: [id])
+     product Product @relation(fields: [productId],references: [id],onDelete:Cascade)
      attribute Json
 }
 //5
