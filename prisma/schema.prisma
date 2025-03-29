@@ -25,18 +25,43 @@ model User{
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
-//main n sub catagory 2,self referencing
-model Catagory{
-    id String @id @default(uuid())
-    name String  @unique 
-    parentId String? 
-    parent Catagory? @relation("CatagoryParent",fields: [parentId] ,references: [id], onDelete:Cascade)
-    subcategories Catagory[] @relation("CatagoryParent")
-    Product Product[]
-    @@index([parentId])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+//main n sub category with 3 layer
+model MainCategory {
+  id            String          @id @default(uuid())
+  name          String          @unique
+        
+  subCategories SubCategory[]   @relation("MainToSub")
+  products      Product[]
+  
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
 }
+
+model SubCategory {
+  id              String           @id @default(uuid())
+  name            String
+  mainCategoryId  String
+  mainCategory    MainCategory    @relation("MainToSub", fields: [mainCategoryId], references: [id], onDelete: Cascade)
+  subSubCategories SubSubCategory[] @relation("SubToSubSub")
+  products        Product[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model SubSubCategory {
+  id            String         @id @default(uuid())
+  name          String
+  subCategoryId String
+  subCategory   SubCategory   @relation("SubToSubSub", fields: [subCategoryId], references: [id], onDelete: Cascade)
+  products      Product[]
+   
+   attribute Json
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
 //3
 model Product{
         id String @id @default(uuid())
@@ -49,8 +74,12 @@ model Product{
         sellerId String
         discount Decimal?
         seller User @relation(fields: [sellerId],references: [id], onDelete:Cascade)
-        catagoryId String
-        catagory Catagory @relation(fields: [catagoryId],references: [id], onDelete:Cascade)
+        maincategoryId String
+        mainCategory MainCategory @relation(fields: [maincategoryId],references: [id], onDelete:Cascade)
+        subCategoryId String
+        subCategory SubCategory @relation(fields: [subCategoryId],references: [id], onDelete:Cascade)
+        categoryId String
+        subSUbCategory SubSubCategory @relation(fields: [categoryId],references: [id], onDelete:Cascade)
         status ProductStatus
         ProductVariant ProductVariant[]
         OrderItem OrderItem[]
@@ -60,7 +89,7 @@ model Product{
         updatedAt DateTime @updatedAt
 
         @@index([sellerId])
-        @@index([catagoryId])
+        @@index([categoryId])
         
 
 
