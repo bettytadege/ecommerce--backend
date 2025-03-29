@@ -6,6 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CatagoryModule } from './catagory/catagory.module';
 import { ProductModule } from './product/product.module';
+import { ProductVariantController } from './product-variant/product-variant.controller';
+import { ProductVariantService } from './product-variant/product-variant.service';
+import { ProductVariantModule } from './product-variant/product-variant.module';
 
 @Module({
   // imports: [AuthModule],
@@ -17,9 +20,10 @@ import { ProductModule } from './product/product.module';
     }),
     CatagoryModule,
     ProductModule,
+    ProductVariantModule,
   ],
 
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ProductVariantController],
+  providers: [AppService, ProductVariantService],
 })
 export class AppModule {}
