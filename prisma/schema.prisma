@@ -9,14 +9,14 @@ datasource db {
 //1
 model User{
     id String @id @default(uuid())
-    name String
+    name String?
     email String @unique
     firebaseUid String @unique
     // password String?
     phoneNumber String? 
     role Role @default(user)
     status Status
-    profileImage String
+//     profileImage String?
     Product Product[]
     Order Order[]
     Cart Cart[]
@@ -40,7 +40,8 @@ model MainCategory {
 
 model SubCategory {
   id              String           @id @default(uuid())
-  name            String
+  name            String    @unique
+  
   mainCategoryId  String
   mainCategory    MainCategory    @relation("MainToSub", fields: [mainCategoryId], references: [id], onDelete: Cascade)
   subSubCategories SubSubCategory[] @relation("SubToSubSub")
@@ -76,7 +77,7 @@ model Product{
         seller User @relation(fields: [sellerId],references: [id], onDelete:Cascade)
         maincategoryId String
         mainCategory MainCategory @relation(fields: [maincategoryId],references: [id], onDelete:Cascade)
-        subCategoryId String
+        subCategoryId String 
         subCategory SubCategory @relation(fields: [subCategoryId],references: [id], onDelete:Cascade)
         categoryId String
         subSUbCategory SubSubCategory @relation(fields: [categoryId],references: [id], onDelete:Cascade)
