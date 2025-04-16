@@ -16,7 +16,10 @@ model User{
     phoneNumber String? 
     role Role @default(user)
     status Status
-//     profileImage String?
+    avatar String?
+    addressId String?
+    address Address? @relation(fields: [addressId], references: [id])
+    
     Product Product[]
     Order Order[]
     Cart Cart[]
@@ -25,46 +28,33 @@ model User{
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
-//main n sub category with 3 layer
-model MainCategory {
-  id            String          @id @default(uuid())
-  name          String          @unique
-        
-  subCategories SubCategory[]   @relation("MainToSub")
-  products      Product[]
-  
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
 
+model Address{
+  id String @id @default(uuid())
+  city String
+  address String
+
+  User User[]
 }
 
-model SubCategory {
-  id              String           @id @default(uuid())
-  name            String    @unique
-  
-  mainCategoryId  String
-  mainCategory    MainCategory    @relation("MainToSub", fields: [mainCategoryId], references: [id], onDelete: Cascade)
-  subSubCategories SubSubCategory[] @relation("SubToSubSub")
-  products        Product[]
+model Category {
+  id        String      @id @default(uuid())
+  name      String
+  parentId  String?       @map("parent_id")
+  parent    Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Category[] @relation("CategoryHierarchy")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  Product Product[]
 }
 
-model SubSubCategory {
-  id            String         @id @default(uuid())
-  name          String
-  subCategoryId String
-  subCategory   SubCategory   @relation("SubToSubSub", fields: [subCategoryId], references: [id], onDelete: Cascade)
-  products      Product[]
-   
-   attribute Json
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-}
+
+
 
 //3
-model Product{
+
+   model Product{
         id String @id @default(uuid())
         name String
         image String[]
@@ -75,12 +65,9 @@ model Product{
         sellerId String
         discount Decimal?
         seller User @relation(fields: [sellerId],references: [id], onDelete:Cascade)
-        maincategoryId String
-        mainCategory MainCategory @relation(fields: [maincategoryId],references: [id], onDelete:Cascade)
-        subCategoryId String 
-        subCategory SubCategory @relation(fields: [subCategoryId],references: [id], onDelete:Cascade)
+       
         categoryId String
-        subSUbCategory SubSubCategory @relation(fields: [categoryId],references: [id], onDelete:Cascade)
+        category Category @relation(fields: [categoryId],references: [id], onDelete:Cascade)
         status ProductStatus
         ProductVariant ProductVariant[]
         OrderItem OrderItem[]
@@ -92,8 +79,6 @@ model Product{
         @@index([sellerId])
         @@index([categoryId])
         
-
-
 }
 //4
 model ProductVariant{
