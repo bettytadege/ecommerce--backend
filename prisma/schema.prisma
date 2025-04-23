@@ -22,7 +22,7 @@ model User{
     
     Product Product[]
     Order Order[]
-    Cart Cart[]
+ 
     Payment Payment[]
     RatingAndReview RatingAndReview[]
     createdAt DateTime @default(now())
@@ -70,8 +70,7 @@ model Category {
         category Category @relation(fields: [categoryId],references: [id], onDelete:Cascade)
         status ProductStatus
         ProductVariant ProductVariant[]
-        OrderItem OrderItem[]
-        CartItem CartItem[]
+       
         RatingAndReview RatingAndReview[]
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
@@ -79,6 +78,7 @@ model Category {
         @@index([sellerId])
         @@index([categoryId])
         
+        Order Order[]
 }
 //4
 model ProductVariant{
@@ -96,44 +96,46 @@ model Order{
         userId String
         user User @relation(fields: [userId],references: [id])
         status OrderStatus
-        OrderItem OrderItem[]
+        productId String
+        product Product @relation(fields: [productId],references: [id])
+        quantity Int
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
         Payment Payment[]
 }
 //6
-model OrderItem{
-        id String @id @default(uuid())
-        orderId String
-        order Order @relation(fields: [orderId],references: [id])
-        productId String
-        product Product @relation(fields: [productId],references: [id])
-        quantity Int
-        price Float
-        createdAt DateTime @default(now())
-        updatedAt DateTime @updatedAt
+// model OrderItem{
+//         // id String @id @default(uuid())
+//         // orderId String
+//         // order Order @relation(fields: [orderId],references: [id])
+//         productId String
+//         product Product @relation(fields: [productId],references: [id])
+//         quantity Int
+//         price Float
+//         createdAt DateTime @default(now())
+//         updatedAt DateTime @updatedAt
 
-}
+// }
 //7
-model Cart{
-        id String @id @default(uuid())
-        userId String
-        user User @relation(fields: [userId],references: [id])
-        CartItem CartItem[]
-        createdAt DateTime @default(now())
-        updatedAt DateTime @updatedAt
+// model Cart{
+//         id String @id @default(uuid())
+//         userId String
+//         user User @relation(fields: [userId],references: [id])
+//         CartItem CartItem[]
+//         createdAt DateTime @default(now())
+//         updatedAt DateTime @updatedAt
 
-}
-//8
-model CartItem{
-        id String @id @default(uuid())
-        cartId String
-        cart Cart @relation(fields: [cartId],references: [id])
-        productId String
-        product Product @relation(fields: [productId],references: [id])
-        createdAt DateTime @default(now())
-        updatedAt DateTime @updatedAt
-}
+// }
+// //8
+// model CartItem{
+//         id String @id @default(uuid())
+//         cartId String
+//         cart Cart @relation(fields: [cartId],references: [id])
+//         productId String
+//         product Product @relation(fields: [productId],references: [id])
+//         createdAt DateTime @default(now())
+//         updatedAt DateTime @updatedAt
+// }
 //9
 model Payment{
         id String @id @default(uuid())
