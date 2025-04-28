@@ -14,7 +14,7 @@ model User{
     firebaseUid String @unique
     // password String?
     phoneNumber String? 
-    role Role @default(user)
+    role Role @default(USER)
     status Status
     avatar String?
     addressId String?
@@ -99,6 +99,7 @@ model Order{
         productId String
         product Product @relation(fields: [productId],references: [id])
         quantity Int
+        subTotal Float
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
         Payment Payment[]
@@ -159,22 +160,24 @@ model RatingAndReview{
 }
 
 enum Role{
-    user
-    admin
-    seller
+    USER
+    ADMIN
+    SELLER
 }
 enum Status{
-    active
-    inactive
+    ACTIVE
+    INACTIVE
 
 }
 enum ProductStatus{
-    out_of_stock
-    active
-    inactive
+    OUTOFSTOCK
+    ACTIVE
+    INACTIVE
 }
 enum OrderStatus{
-    pending
-    cancelled
-    delivered
+    PENDING
+    CANCELLED
+    FAILED
+    DELIVERED
+    CONFIRMED
 }
