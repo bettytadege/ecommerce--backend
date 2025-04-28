@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -18,7 +19,7 @@ export class AuthService {
       console.log(idtoken)
         const decodeToken = await this.firebaseService.verifyToken(idtoken);
         console.log('token:', decodeToken);
-        const { email,name, uid ,picture} = decodeToken;
+        const { email,name, uid } = decodeToken;
     
         let user = await this.prismaService.user.findUnique({
           where: {
@@ -33,8 +34,8 @@ export class AuthService {
               email: email ?? '', 
               name: name ?? '', 
               firebaseUid: uid, 
-              role: 'user',
-              status:'active'
+              role: 'USER',
+              status:'ACTIVE'
             },
           });
         }
@@ -74,8 +75,8 @@ export class AuthService {
               email: email ?? '', 
               name: name ?? '', 
               firebaseUid: uid, 
-              role: 'user',
-              status:'active'
+              role: 'USER',
+              status:'ACTIVE'
             },
           });
         }
