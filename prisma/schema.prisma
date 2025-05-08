@@ -39,6 +39,8 @@ model Address {
   postalCode String?
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  Order Order[] @relation("address")
 }
 
 
@@ -96,7 +98,6 @@ model ProductVariant{
      product Product @relation(fields: [productId],references: [id],onDelete:Cascade)
      attribute Json
      order Order[]
-
      Cart Cart[]
 }
 //5
@@ -112,7 +113,11 @@ model Order{
         subTotal Float
          Payment Payment[]
        variantId String
-  productVariant   ProductVariant  @relation(fields: [variantId], references: [id])
+        productVariant   ProductVariant  @relation(fields: [variantId], references: [id])
+        cartId         String?       
+       cart           Cart?          @relation(fields: [cartId], references: [id])
+      addressId String
+      address  Address   @relation("address", fields: [addressId], references: [id])
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
        
@@ -132,6 +137,7 @@ model Cart{
 
         @@unique([userId, variantId])
 
+        Order Order[]
 }
 
 model Payment{
