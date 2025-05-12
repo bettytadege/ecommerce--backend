@@ -7,47 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 //1
-model User{
-    id String @id @default(uuid())
-    name String?
-    email String @unique
-    firebaseUid String @unique
-    // password String?
-    phoneNumber String? 
-    role Role @default(USER)
-    status Status
-    avatar String?
-    
-    address Address[]
-    
-    Product Product[]
-    Order Order[]
- 
-    Payment Payment[]
-    RatingAndReview RatingAndReview[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  firebaseUid String @unique
+  phoneNumber String?
+  role      Role     @default(USER)
+  status    Status
+  avatar    String?
 
-    Cart Cart[]
+
+  // One-to-One Relation
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId String?  @unique
+
+  Product   Product[]
+  Order     Order[]
+  Payment   Payment[]
+  RatingAndReview RatingAndReview[]
+  Cart      Cart[]
+    createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Address {
-  id        String   @id @default(uuid())
-  city      String
-  state     String
-  street    String
+  id         String   @id @default(uuid())
+  city       String
+  state      String
+  street     String
   postalCode String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  user      User?
+  
 
-  Order Order[] @relation("address")
+   Order Order[] @relation("address")
 }
 
 
 model Category {
   id        String      @id @default(uuid())
   name      String
-  parentId  String?       @map("parent_id")
+  parentId  String?       //@map("parent_id")
   parent    Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
   children  Category[] @relation("CategoryHierarchy")
   createdAt DateTime   @default(now())
@@ -104,20 +105,20 @@ model ProductVariant{
 model Order{
 
         id String @id @default(uuid())
-        userId String
+        userId String 
         user User @relation(fields: [userId],references: [id])
         status OrderStatus
         productId String
         product Product @relation(fields: [productId],references: [id])
         quantity Int
         subTotal Float
-         Payment Payment[]
-       variantId String
+        Payment Payment[]
+        variantId String
         productVariant   ProductVariant  @relation(fields: [variantId], references: [id])
         cartId         String?       
-       cart           Cart?          @relation(fields: [cartId], references: [id])
-      addressId String
-      address  Address   @relation("address", fields: [addressId], references: [id])
+        cart           Cart?          @relation(fields: [cartId], references: [id])
+        addressId String?
+        address  Address?   @relation("address", fields: [addressId], references: [id])
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
        
