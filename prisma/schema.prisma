@@ -147,6 +147,8 @@ model Payment{
         user User @relation(fields: [userId],references: [id])
         orderId String
         order Order @relation(fields: [orderId],references: [id])
+        txRef     String?  // Chapa transaction reference
+      status    String   @default("PENDING")
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
 }
