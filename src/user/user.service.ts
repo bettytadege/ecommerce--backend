@@ -19,6 +19,7 @@ export class UserService {
             where: {
               id,
             },
+            include:{address:true}
             
           });
           console.log(user);
