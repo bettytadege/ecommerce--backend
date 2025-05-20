@@ -18,7 +18,14 @@ async function bootstrap() {
     .build();
     const documentFactory=SwaggerModule.createDocument(app,config)
     SwaggerModule.setup('api',app,documentFactory)
-    app.useGlobalPipes(new ValidationPipe());
+      app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+    // app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT ?? 3000);
 }
 bootstrap();
