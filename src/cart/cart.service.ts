@@ -46,6 +46,7 @@ export class CartService {
   async findAll(userId: string) {
     return this.prismaService.cart.findMany({
       where: { userId },
+      orderBy:{createdAt:'desc'},
       include: {
         productVariant: {
           include: {
@@ -59,7 +60,9 @@ export class CartService {
                 categoryId: true,
               },
             },
+          
           },
+          
         },
       },
     });
