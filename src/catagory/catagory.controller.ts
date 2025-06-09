@@ -8,13 +8,13 @@ import {
   Param,
   Post,
   Put,
-  Query,
+  
 } from '@nestjs/common';
 import { CatagoryService } from './catagory.service';
 import { CreateCategoryDto } from './dto/create.catagory.dto';
 import { UpdateCatagoryDto } from './dto/update.catagory.dto';
-import { PaginationDto } from 'src/dto/pagnation.dto';
-import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
+
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 @Controller('categories')
 export class CatagoryController {
