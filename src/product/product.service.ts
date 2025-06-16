@@ -10,7 +10,7 @@ import {
 import { CreateProductDto } from './dto/create.product.dto';
 import { UpdateProductDto } from './dto/update.product.dto';
 import { PaginationDto } from 'src/dto/pagnation.dto';
-import { DEFAULT_PAGE_SIZE } from 'src/utils/constant';
+
 @Injectable()
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
