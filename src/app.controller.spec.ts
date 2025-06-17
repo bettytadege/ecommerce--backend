@@ -16,8 +16,11 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return the documentation message and link', () => {
+      expect(appController.getHello()).toEqual({
+        message: 'please check the documentations',
+        data: '/api',
+      });
     });
   });
 });
