@@ -122,9 +122,12 @@ export class ProductService {
      orderBy:{
       createdAt:'desc'
      },
+     select:{
+  image:true,price:true,name:true,id:true,discount:true
+     },
      take:limit
     })
-    return newArrival
+    return {total:newArrival.length,  newArrival}
   }
 
   async findProductsBySeller(id: string) {
