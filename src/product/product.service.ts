@@ -117,6 +117,16 @@ export class ProductService {
     }
   }
 
+  async getNewArrival(limit:number){
+    const newArrival=await this.prismaService.product.findMany({
+     orderBy:{
+      createdAt:'desc'
+     },
+     take:limit
+    })
+    return newArrival
+  }
+
   async findProductsBySeller(id: string) {
     console.log('id-', id);
     try {
