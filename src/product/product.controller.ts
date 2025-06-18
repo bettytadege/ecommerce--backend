@@ -32,7 +32,7 @@ export class ProductController {
         
     }
 
-    @Get('new-aarival')
+    @Get('new-arrival')
     async getNewArrival(@Query('limit') limit:string){
         const num=parseInt(limit) || 10
         return this.productService.getNewArrival(num)
