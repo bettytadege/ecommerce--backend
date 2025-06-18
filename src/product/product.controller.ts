@@ -20,6 +20,7 @@ export class ProductController {
     return this.productService.findAll()
     }
 
+
     @Get(':id')
     async findOne(@Param('id') id:string){
         return this.productService.findOne(id)
@@ -29,6 +30,12 @@ export class ProductController {
     async findProductsBySeller(@Param('id') id:string){
         return this.productService.findProductsBySeller(id)
         
+    }
+
+    @Get('new-aarival')
+    async getNewArrival(@Query('limit') limit:string){
+        const num=parseInt(limit) || 10
+        return this.productService.getNewArrival(num)
     }
 
     @Get('catagory/:id')
