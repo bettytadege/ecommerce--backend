@@ -100,8 +100,42 @@ export class ProductService {
     return this.prismaService.product.findMany({include:{ProductVariant:true,category:true}});
   }
 
+   async getNewArrival(limit:number){
+    const day=new Date() //now
+    day.setDate(day.getDate() - 14 ) 
+    let newArrival=await this.prismaService.product.findMany({
+     where:{
+      createdAt:{
+        gte:day
+      }
+     },
+     orderBy:{
+      createdAt:'desc'
+     },
+     select:{
+  image:true,price:true,name:true,id:true,discount:true
+     },
+     take:limit
+    })
+    if(newArrival.length === 0){
+
+    
+     newArrival=await this.prismaService.product.findMany({
+     orderBy:{
+      createdAt:'desc'
+     },
+     select:{
+  image:true,price:true,name:true,id:true,discount:true
+     },
+     take:limit
+    })
+  }
+    return {total:newArrival.length,  newArrival}
+  }
+
   async findOne(id: string) {
     console.log('id-', id);
+     console.log('🔍 findOne called with id:', id);
     try {
       const product = await this.prismaService.product.findUnique({
         where: { id },
@@ -117,21 +151,11 @@ export class ProductService {
     }
   }
 
-  async getNewArrival(limit:number){
-    const newArrival=await this.prismaService.product.findMany({
-     orderBy:{
-      createdAt:'desc'
-     },
-     select:{
-  image:true,price:true,name:true,id:true,discount:true
-     },
-     take:limit
-    })
-    return {total:newArrival.length,  newArrival}
-  }
+ 
 
   async findProductsBySeller(id: string) {
     console.log('id-', id);
+     console.log('🔍 findProductsBySeller called with sellerId:', id);
     try {
       console.log('first');
       const product = await this.prismaService.product.findFirst({
